@@ -8,10 +8,17 @@ stone_texture = load_texture("assets/stone_block.png")
 brick_texture = load_texture("assets/brick_block.png")
 dirt_texture = load_texture("assets/dirt_block.png")
 sky_texture = load_texture("assets/skybox.png")
+arm_texture = load_texture("assets/arm_texture.png")
 block_pick = 1
 
 def update():
     global block_pick
+    
+    if held_keys['left mouse'] or held_keys['right mouse']:
+        hand.active()
+    else:
+        hand.passive()
+
     if held_keys['1']:
         block_pick = 1
     if held_keys['2']:
@@ -73,10 +80,29 @@ class Sky(Entity):
             double_sided = True
         )
 
+
+class Hand(Entity):
+    def __init__(self):
+        super().__init__(
+            parent = camera.ui,
+            model = 'assets/arm',
+            texture = arm_texture,
+            scale = 0.2,
+            rotation = Vec3(150,-10,0),
+            position = Vec2(0.4, -0.65)
+        )
+
+    def active(self):
+        self.position = Vec2(0.3, -0.55)
+    
+    def passive(self):
+        self.position = Vec2(0.4, -0.65)
+
 for z in range(8):
     for x in range(8):
         voxel = Voxel(position=(x,0,z))
 
 player = FirstPersonController()
 sky = Sky()
+hand = Hand()
 app.run()
